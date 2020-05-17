@@ -1,0 +1,144 @@
+@page
+@model Task31Model
+@{
+  var positiveIncreaseDataset1 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.positiveIncreaseDataset1);
+  var negativeIncreaseDataset1 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.negativeIncreaseDataset1);
+  var datesDataset1 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.datesDataset1);
+  var stateName1 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.stateName1);
+  
+  var positiveIncreaseDataset2 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.positiveIncreaseDataset2);
+  var negativeIncreaseDataset2 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.negativeIncreaseDataset2);
+  var datesDataset2 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.datesDataset2);
+  var stateName2 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.stateName2);
+  
+  var positiveIncreaseDataset3 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.positiveIncreaseDataset3);
+  var negativeIncreaseDataset3 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.negativeIncreaseDataset3);
+  var datesDataset3 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.datesDataset3);
+  var stateName3 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.stateName3);
+  
+  var datesDatasetAll = Newtonsoft.Json.JsonConvert.SerializeObject(Model.datesDatasetAll);
+  
+  ViewData["Title"] = "State Information";
+}
+
+<h2>Task 3 (Version 2: 1 graph instead of 3)</h2>  
+<p> 3. Next, implement a way to compare the positive case increase (positiveIncrease)and negative case increase (negativeIncrease) across 3 different states. Choose the 3 different states through either a text box or a dropdownbox.Proper legends are to be present.For more information on drop down box go through <a>http://csharp.net-informations.com/gui/cs-combobox.htm</a> </p>
+<br />
+Your search string 1: "@Model.Input"
+<br />
+# of entries found: @Model.Count1
+<br />
+Your search string 2: "@Model.Input2"
+<br />
+# of entries found: @Model.Count2
+<br />
+Your search string 3: "@Model.Input3"
+<br />
+# of entries found: @Model.Count3
+<br />
+# of distinct date entries found: @Model.CountAllDates
+<br />
+
+<br />
+@{
+   if (@Model.EX != null)
+	 {
+		 <h3>**ERROR: @Model.EX.Message</h3>
+		 <br />
+		 <hr />
+		 <br />
+		 <br />
+	 }
+}
+
+<div class="box-body">  
+  <div class="chart-container">  
+     <canvas id="myChart"></canvas>  
+  </div>
+  <div class="chart-container">  
+     <canvas id="myChart2"></canvas>  
+  </div>
+  <div class="chart-container">  
+     <canvas id="myChart3"></canvas>  
+  </div>
+</div>  
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+
+<script>
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: @Html.Raw(datesDatasetAll),
+        datasets: [
+        {
+            label: 'Positive Increases ' + @Html.Raw(stateName1),  
+            data: @Html.Raw(positiveIncreaseDataset1),
+            borderColor: "blue",
+            pointBackgroundColor: "black",
+
+            borderWidth: 1
+        }, 
+        {
+            label: 'Negative Increase ' + @Html.Raw(stateName1),  
+            data: @Html.Raw(negativeIncreaseDataset1),
+            borderColor: "red",
+            pointBackgroundColor: "black",
+
+            borderWidth: 1
+        },
+        {
+            label: 'Positive Increases ' + @Html.Raw(stateName2),  
+            data: @Html.Raw(positiveIncreaseDataset2),
+            borderColor: "cyan",
+            pointBackgroundColor: "black",
+
+            borderWidth: 1
+        }, 
+        {
+            label: 'Negative Increase ' + @Html.Raw(stateName2),  
+            data: @Html.Raw(negativeIncreaseDataset2),
+            borderColor: "purple",
+            pointBackgroundColor: "black",
+
+            borderWidth: 1
+        },
+        {
+            label: 'Positive Increases ' + @Html.Raw(stateName3),  
+            data: @Html.Raw(positiveIncreaseDataset3),
+            borderColor: "green",
+            pointBackgroundColor: "black",
+
+            borderWidth: 1
+        }, 
+        {
+            label: 'Negative Increase ' + @Html.Raw(stateName3),  
+            data: @Html.Raw(negativeIncreaseDataset3),
+            borderColor: "yellow",
+            pointBackgroundColor: "black",
+
+            borderWidth: 1
+        }
+        ]
+    },
+    options: {
+        scales: {
+            xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Dates',
+                  beginAtZero:true
+                }
+            }],
+            yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Positives/Negative Increases',
+                  beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+</script>

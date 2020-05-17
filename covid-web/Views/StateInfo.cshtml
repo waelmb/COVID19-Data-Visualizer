@@ -1,0 +1,109 @@
+@page
+@model StateInfoModel
+@{
+  var populationDataset = Newtonsoft.Json.JsonConvert.SerializeObject(Model.populationDataset);
+  var yearDataset = Newtonsoft.Json.JsonConvert.SerializeObject(Model.yearDataset);
+  var stateName = Newtonsoft.Json.JsonConvert.SerializeObject(Model.stateName);
+  ViewData["Title"] = "State Information";
+}
+
+<h2>State Information</h2>  
+
+<br />
+Your search string: "@Model.Input"
+<br />
+# of states found: @Model.StateList.Count
+<br />
+<br />
+@{
+   if (@Model.EX != null)
+	 {
+		 <h3>**ERROR: @Model.EX.Message</h3>
+		 <br />
+		 <hr />
+		 <br />
+		 <br />
+	 }
+}
+
+<table class="table">  
+    <thead>  
+        <tr>   
+            <th>  
+                State
+            </th>  
+						<th>  
+                Year
+            </th>  
+            <th>  
+                Population
+            </th>  
+        </tr>  
+    </thead>  
+    <tbody>  
+        @foreach (var item in Model.StateList)  
+        {  
+            <tr>  
+                <td>  
+										@item.StateName
+                </td>  
+                <td>  
+                    @item.Year
+                </td> 
+								<td>  
+                    @item.Population
+                </td> 
+            </tr>  
+        }  
+    </tbody>  
+</table> 
+
+<h2>Task 1</h2>  
+<br/>
+<p>1. Your first taskis to graph the tabular form of census datain the form of a line chart. </p>
+<br/>
+
+<div class="box-body">  
+  <div class="chart-container">  
+     <canvas id="myChart"></canvas>  
+  </div>  
+</div>  
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+
+<script>
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: @Html.Raw(yearDataset),
+        datasets: [
+        {
+            label: @Html.Raw(stateName),  
+            data: @Html.Raw(populationDataset),
+            borderColor: "blue",
+            pointBackgroundColor: "black",
+
+            borderWidth: 1
+        }
+        ]
+    },
+    options: {
+        scales: {
+            xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Year'
+                }
+            }],
+            yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Population'
+                }
+            }]
+        }
+    }
+});
+
+</script>

@@ -1,0 +1,84 @@
+@page
+@model Task2Model
+@{
+  var hospitalizationDataset = Newtonsoft.Json.JsonConvert.SerializeObject(Model.hospitalizationDataset);
+  var deathsDataset = Newtonsoft.Json.JsonConvert.SerializeObject(Model.deathsDataset);
+  var datesDataset = Newtonsoft.Json.JsonConvert.SerializeObject(Model.datesDataset);
+  var stateName = Newtonsoft.Json.JsonConvert.SerializeObject(Model.stateName);
+  ViewData["Title"] = "State Information";
+}
+
+<h2>Task 2</h2>  
+<br />
+<p>2. Your second taskis to implement a graph displayingthe total number of hospitalizations and(hospitalized) and total number of deaths (death) over the dates availablefor a state which mustbe provided via a text box. Use us_states_covid19_daily table for this purpose. The graph must enable users to hover over the line and show the raw data for that date. Proper legends are to be present. </p>
+<br />
+Your search string: "@Model.Input"
+<br />
+# of entries found: @Model.Count
+<br />
+<br />
+@{
+   if (@Model.EX != null)
+	 {
+		 <h3>**ERROR: @Model.EX.Message</h3>
+		 <br />
+		 <hr />
+		 <br />
+		 <br />
+	 }
+}
+
+<div class="box-body">  
+  <div class="chart-container">  
+     <canvas id="myChart"></canvas>  
+  </div>  
+</div>  
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+
+<script>
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: @Html.Raw(datesDataset),
+        datasets: [
+        {
+            label: 'Hospitalizations',  
+            data: @Html.Raw(hospitalizationDataset),
+            borderColor: "blue",
+            pointBackgroundColor: "black",
+
+            borderWidth: 1
+        }, 
+        {
+            label: 'Deaths',  
+            data: @Html.Raw(deathsDataset),
+            borderColor: "red",
+            pointBackgroundColor: "black",
+
+            borderWidth: 1
+        }
+        ]
+    },
+    options: {
+        scales: {
+            xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Dates',
+                  beginAtZero:true
+                }
+            }],
+            yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Hospitalizations/Deaths',
+                  beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+
+</script>

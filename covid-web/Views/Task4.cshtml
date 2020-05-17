@@ -1,0 +1,106 @@
+@page
+@model Task4Model
+@{
+  var step2FormattedDates = Newtonsoft.Json.JsonConvert.SerializeObject(Model.step2FormattedDates);
+  var totalsDataset = Newtonsoft.Json.JsonConvert.SerializeObject(Model.totalsDataset);
+  var testDataset = Newtonsoft.Json.JsonConvert.SerializeObject(Model.testDataset);
+  var eventsDataStructureOriginal = Newtonsoft.Json.JsonConvert.SerializeObject(Model.eventsDataStructure);
+  ViewData["Title"] = "State Information";
+}
+
+<h2>Task 4</h2>  
+<br />
+<p>4. Last, combine US COVID Data and US Mitigation Databy implementing a graph with total cases (total) of a state and by using marker points to find any news (DescriptionOfMeasure) for that day for that particular state. Proper legends are to be present.</p>
+<br />
+Your search string: "@Model.Input"
+<br />
+# of dates found: @Model.CountDates
+<br />
+# of total mitigations found: @Model.CountNews
+<br />
+# of mitigations within cases reported found: @Model.CountNewsWithin
+<br />
+<br />
+<p>Hover over data points to see the news for that specific date.</p>
+<br/>
+@{
+   if (@Model.EX != null)
+	 {
+		 <h3>**ERROR: @Model.EX.Message</h3>
+		 <br />
+		 <hr />
+		 <br />
+		 <br />
+	 }
+}
+
+<div class="box-body">  
+  <div class="chart-container">  
+     <canvas id="myChart"></canvas>  
+  </div>  
+</div>  
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+
+<script>
+var datesArray = @Html.Raw(step2FormattedDates)
+var eventsDataStructure = @Html.Raw(eventsDataStructureOriginal)
+var index = 0
+console.log(eventsDataStructure)
+
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: datesArray,
+        datasets: [
+        {
+            label: 'Total Cases',  
+            data: @Html.Raw(totalsDataset),
+            borderColor: "blue",
+            pointBackgroundColor: "black",
+            borderWidth: 1
+        }
+        ]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Total Cases and Mitagations Over Dates For ' + '@Model.stateName'
+        },
+        scales: {
+            xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Dates',
+                  beginAtZero:true
+                }
+            }],
+            yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Total Cases',
+                  beginAtZero:true
+                }
+            }]
+        },
+        tooltips: {
+                  enabled: true,
+                  mode: 'single',
+                  callbacks: {
+                           label: function (tooltipItems, data) {
+                                console.log('tooltipItems: ')
+                                console.log(tooltipItems)
+                                console.log('data: ' + data)
+                                console.log(data)
+                                return  "Total Cases: " + tooltipItems.yLabel;
+                           },
+                          afterLabel: function(tooltipItem, data) {
+                            return eventsDataStructure[datesArray.indexOf(tooltipItem.xLabel)];
+                          }
+                  }
+         }
+    }
+});
+
+</script>
